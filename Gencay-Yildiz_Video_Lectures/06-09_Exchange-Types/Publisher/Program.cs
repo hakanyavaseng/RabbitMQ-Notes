@@ -42,7 +42,24 @@ for (int i = 0; i < 100; i++)
 #endregion
 
 #region Topic Exchange
+channel.ExchangeDeclare(
+    exchange: "topic-exchange-example",
+    type: ExchangeType.Topic
+    );
 
+for (int i = 0; i < 100; i++)
+{
+    await Task.Delay(200);
+    byte[] message = Encoding.UTF8.GetBytes($"Hello {i+1}");
+    Console.Write("Please write topic: ");
+    string topic = Console.ReadLine();
+
+    channel.BasicPublish(
+        exchange: "topic-exchange-example",
+        routingKey: topic,
+        body: message);
+    
+}
 
 #endregion
 

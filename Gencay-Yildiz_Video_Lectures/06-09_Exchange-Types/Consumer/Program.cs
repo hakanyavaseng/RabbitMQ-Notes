@@ -64,7 +64,27 @@ consumer.Received += (sender, e) =>
 
 
 #region Topic Exchange
+channel.ExchangeDeclare(
+    exchange: "topic-exchange-example",
+    type: ExchangeType.Topic
+    );
 
+
+Console.Write("Please write topic to listen: ");
+string topic = Console.ReadLine();
+
+
+string queueName = channel.QueueDeclare().QueueName;
+channel.QueueBind(queueName, "topic-exchange-example", topic);
+
+
+EventingBasicConsumer consumer = new(channel);
+channel.BasicConsume(queue: queueName, consumer: consumer, autoAck: true);
+
+consumer.Received += (sender, e) =>
+{
+    Console.WriteLine(Encoding.UTF8.GetString(e.Body.Span));
+};
 
 #endregion
 
