@@ -42,6 +42,7 @@ for (int i = 0; i < 100; i++)
 #endregion
 
 #region Topic Exchange
+/*
 channel.ExchangeDeclare(
     exchange: "topic-exchange-example",
     type: ExchangeType.Topic
@@ -60,6 +61,40 @@ for (int i = 0; i < 100; i++)
         body: message);
     
 }
+*/
+#endregion
+
+#region Header Exchange
+/* 
+  x-match: İlgili queue'nun mesajı hangi davranışla alacağı kararını veren bir keydir.
+   any => İlgili queue'nun sadece tek bir key-value değerinin eşleşmesi neticesinde mesajı alacağını ifade eder.
+   all => Tüm key-value değerlerinin eşleşmesi neticesinde mesajı alacağını ifade eder. 
+*/
+
+channel.ExchangeDeclare("header-exchange-example", ExchangeType.Headers);
+
+for (int i = 0; i < 100; i++)
+{
+    await Task.Delay(200);
+    byte[] message = Encoding.UTF8.GetBytes($"Hello {i + 1}");
+    Console.Write("Please enter header value: ");
+    string value = Console.ReadLine();
+
+    IBasicProperties basicProperties = channel.CreateBasicProperties();
+    basicProperties.Headers = new Dictionary<string, object>()
+    {
+        ["no"] = value
+    };
+
+    channel.BasicPublish(
+        exchange: "header-exchange-example", 
+        routingKey: string.Empty, 
+        body: message,
+        basicProperties: basicProperties
+        );
+    
+}
+
 
 #endregion
 
