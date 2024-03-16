@@ -10,6 +10,7 @@ using IModel channel = connection.CreateModel();
 
 
 #region Direct Exchange 
+/*
 channel.ExchangeDeclare(exchange: "direct-exchange-example", type: ExchangeType.Direct);
 
 while(true)
@@ -20,6 +21,29 @@ while(true)
 
     channel.BasicPublish(exchange: "direct-exchange-example", routingKey: "direct-queue-example", body: byteMessage);
 }
+*/
+#endregion
+
+#region Fanout Exchange
+/*
+channel.ExchangeDeclare("fanout-exchange-example", ExchangeType.Fanout);
+
+for (int i = 0; i < 100; i++)
+{
+    await Task.Delay(200);
+    byte[] message = Encoding.UTF8.GetBytes($"Hello {i + 1}");
+
+    channel.BasicPublish(
+        exchange: "fanout-exchange-example",
+        routingKey: string.Empty,
+        body: message);
+}
+*/
+#endregion
+
+#region Topic Exchange
+
+
 #endregion
 
 
